@@ -26,6 +26,14 @@ CREATE TABLE IF NOT EXISTS game_history (
 ALTER TABLE players ENABLE ROW LEVEL SECURITY;
 ALTER TABLE game_history ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (prevents duplicate errors)
+DROP POLICY IF EXISTS "Users can read own player data" ON players;
+DROP POLICY IF EXISTS "Users can update own player data" ON players;
+DROP POLICY IF EXISTS "Users can insert own player data" ON players;
+DROP POLICY IF EXISTS "Public can read players for leaderboard" ON players;
+DROP POLICY IF EXISTS "Users can read own game history" ON game_history;
+DROP POLICY IF EXISTS "Users can insert own game history" ON game_history;
+
 -- Players table policies
 -- Users can read their own player data
 CREATE POLICY "Users can read own player data"
