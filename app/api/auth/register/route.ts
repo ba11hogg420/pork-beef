@@ -50,10 +50,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Sign up user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Sign up user with admin API to auto-confirm and bypass email verification
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
+      email_confirm: true, // Auto-confirm email - no verification needed
     });
 
     if (authError) {
@@ -68,6 +69,16 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to create user' },
         { status: 500 }
       );
+    }
+
+    // Sign in the user immediately to get a session
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      console.error('Auto sign-in failed:', signInError);
     }
 
     // Create player profile with starting bankroll
@@ -97,7 +108,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       user: authData.user,
       player: playerData,
-      session: authData.session,
+      session: signInData?.session || null,
     });
 
   } catch (error) {
