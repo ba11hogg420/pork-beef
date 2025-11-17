@@ -73,5 +73,14 @@ CREATE INDEX IF NOT EXISTS idx_players_username ON players(username);
 CREATE INDEX IF NOT EXISTS idx_game_history_player_id ON game_history(player_id);
 CREATE INDEX IF NOT EXISTS idx_game_history_created_at ON game_history(created_at DESC);
 
--- Enable realtime for leaderboard updates
-ALTER PUBLICATION supabase_realtime ADD TABLE players;
+-- Enable realtime for leaderboard updates (skip if already added)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables 
+        WHERE pubname = 'supabase_realtime' 
+        AND tablename = 'players'
+    ) THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE players;
+    END IF;
+END $$;
