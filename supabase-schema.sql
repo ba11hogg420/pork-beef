@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS players (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    wallet_address TEXT UNIQUE NOT NULL,
     username TEXT UNIQUE NOT NULL,
     bankroll DECIMAL(10, 2) DEFAULT 1000.00 NOT NULL,
     total_hands_played INTEGER DEFAULT 0,
@@ -10,6 +11,9 @@ CREATE TABLE IF NOT EXISTS players (
     biggest_win DECIMAL(10, 2) DEFAULT 0.00,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Create index on wallet_address for fast lookups
+CREATE INDEX IF NOT EXISTS idx_players_wallet_address ON players(wallet_address);
 
 -- Create game_history table
 CREATE TABLE IF NOT EXISTS game_history (

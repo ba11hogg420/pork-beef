@@ -22,7 +22,7 @@ export default function GamePage() {
     const sessionData = localStorage.getItem('blackjack_session');
     
     if (!sessionData) {
-      router.push('/login');
+      router.push('/auth');
       return;
     }
 
@@ -43,7 +43,7 @@ export default function GamePage() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load session:', error);
-      router.push('/login');
+      router.push('/auth');
     }
   }, [router]);
 

@@ -38,23 +38,15 @@ export default function HomePage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="grid md:grid-cols-2 gap-6 mb-12"
+          className="flex justify-center mb-12"
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => router.push('/login')}
-            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-xl py-6 rounded-lg shadow-lg"
+            onClick={() => router.push('/auth')}
+            className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-xl py-6 px-12 rounded-lg shadow-lg"
           >
-            Login
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => router.push('/register')}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl py-6 rounded-lg shadow-lg"
-          >
-            Register
+            Connect Wallet & Play
           </motion.button>
         </motion.div>
 
@@ -64,6 +56,14 @@ export default function HomePage() {
           transition={{ delay: 0.4 }}
           className="grid md:grid-cols-3 gap-6"
         >
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+            <div className="text-3xl mb-3">🔐</div>
+            <h3 className="text-lg font-bold text-yellow-400 mb-2">Web3 Auth</h3>
+            <p className="text-sm text-gray-400">
+              Connect with MetaMask, WalletConnect, or any Web3 wallet
+            </p>
+          </div>
+
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
             <div className="text-3xl mb-3">💰</div>
             <h3 className="text-lg font-bold text-yellow-400 mb-2">$1,000 Start</h3>

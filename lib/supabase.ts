@@ -16,7 +16,34 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Helper function to get the current user
+// Helper function to get the current user from session
+export function getCurrentUserFromSession() {
+  if (typeof window === 'undefined') return null;
+  
+  const sessionData = localStorage.getItem('blackjack_session');
+  if (!sessionData) return null;
+  
+  try {
+    const session = JSON.parse(sessionData);
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+// Helper function to get player data by wallet address
+export async function getPlayerByWallet(walletAddress: string) {
+  const { data, error } = await supabase
+    .from('players')
+    .select('*')
+    .eq('wallet_address', walletAddress.toLowerCase())
+    .single();
+  
+  if (error) throw error;
+  return data;
+}
+
+// Helper function to get the current user (legacy auth support)
 export async function getCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error) throw error;
