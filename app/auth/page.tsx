@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAccount, useSignMessage } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useAppKit } from '@reown/appkit/react';
 
 export default function AuthPage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
-  const { open } = useWeb3Modal();
+  const { open } = useAppKit();
   const { signMessageAsync } = useSignMessage();
   
   const [username, setUsername] = useState('');
@@ -36,8 +36,12 @@ export default function AuthPage() {
     setError('');
 
     try {
-      // Create message to sign
-      const message = `Sign this message to authenticate with Blackjack Game.\n\nWallet: ${address}\nTimestamp: ${Date.now()}`;
+      // Generate secure timestamp and nonce for message
+      const timestamp = Date.now().toString();
+      const nonce = crypto.randomUUID();
+      
+      // Create message to sign with timestamp and nonce for security
+      const message = `Sign this message to authenticate with Blackjack Game.\n\nWallet: ${address}\nTimestamp: ${timestamp}\nNonce: ${nonce}`;
       
       // Request signature
       const signature = await signMessageAsync({ message });
@@ -50,6 +54,8 @@ export default function AuthPage() {
           walletAddress: address,
           signature,
           message,
+          timestamp,
+          nonce,
           username: username || undefined,
         }),
       });

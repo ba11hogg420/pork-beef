@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useAccount, useSignMessage } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useAppKit } from '@reown/appkit/react';
 
 export default function AuthPage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
-  const { open } = useWeb3Modal();
+  const { open } = useAppKit();
   const { signMessageAsync } = useSignMessage();
   
   const [username, setUsername] = useState('');
