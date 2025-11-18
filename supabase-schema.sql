@@ -92,12 +92,16 @@ END $$;
 
 -- Create trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER
+SET search_path = public
+LANGUAGE plpgsql
+AS $$
 BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS update_players_updated_at ON players;
 CREATE TRIGGER update_players_updated_at
@@ -107,14 +111,18 @@ CREATE TRIGGER update_players_updated_at
 
 -- Add additional security: Prevent modification of created_at
 CREATE OR REPLACE FUNCTION prevent_created_at_update()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER
+SET search_path = public
+LANGUAGE plpgsql
+AS $$
 BEGIN
     IF NEW.created_at <> OLD.created_at THEN
         RAISE EXCEPTION 'created_at cannot be modified';
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS prevent_players_created_at_update ON players;
 CREATE TRIGGER prevent_players_created_at_update
